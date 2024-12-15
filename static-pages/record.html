@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table align="center">
+    <tr>
+        <td><h3 align="center">当前操作:查询交易记录。请选择时间范围后点“查询”按钮</h3></td>
+    </tr>
+    <tr>
+        <td>
+            <form method="post" action="record.html">
+                查询日期范围：<input name="start" value="2020-07-20">到<input name="end" value="2020-07-30"><input type="submit" value="查询">
+            </form>
+        </td>
+    </tr>
+</table>
+<table width="100%" border="1">
+    <tr align="center" bgcolor="#adff2f"><td>交易时间</td><td>存入</td><td>支出</td><td>账户金额</td><td>交易类型</td><td>备注</td></tr>
+    <tr align="center"><td>2020-07-28 10:19:33</td><td></td><td>500.00</td><td>8688.00</td><td>转出</td><td>收款人87654321</td></tr>
+    <tr align="center" bgcolor="#adff2f"><td>2020-07-27 11:13:46</td><td>88.00</td><td></td><td>9188.00</td><td>转入</td><td>付款人12345678</td></tr>
+    <tr align="center"><td>2020-07-21 19:34:57</td><td>100.00</td><td></td><td>9100.00</td><td>转入</td><td>付款人24680135</td></tr>
+    <tr align="center" bgcolor="#adff2f"><td>2020-07-20 11:35:13</td><td></td><td>200.00</td><td>9000.00</td><td>转出</td><td>收款人87654321</td></tr>
+    <tr align="center">
+        <td colspan="6">
+            <a href="record.html">首页</a>|<a href="record.html">上一页</a>|<a href="record.html">下一页</a>|<a href="record.html">末页</a>
+            第1页/共2页(7条记录)
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
