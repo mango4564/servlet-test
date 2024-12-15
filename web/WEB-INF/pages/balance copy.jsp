@@ -82,7 +82,7 @@
         <h2 class="balance-title">账户余额</h2>
         
         <div class="balance-label">当前可用余额</div>
-        <div class="balance-amount">
+        <div class="balance-amount" id="balance">
             <i class="fas fa-yen-sign currency-icon"></i>
             ${requestScope.balance}元
         </div>

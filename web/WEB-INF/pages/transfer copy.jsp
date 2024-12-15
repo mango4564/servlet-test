@@ -112,19 +112,19 @@
             <p><i class="fas fa-info-circle"></i>请仔细核对转账信息，确保账号无误</p>
         </div>
         
-        <form method="post" action="${pageContext.request.contextPath}/user/transfer.html">
+        <form method="post" id="transferForm" action="${pageContext.request.contextPath}/user/transfer.html">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="cardNum" name="cardNum" placeholder="请输入收款人卡号" required>
+                <input type="text" class="form-control" id="cardNum" name="cardNum" placeholder="请输入收款人卡号">
                 <label for="cardNum"><i class="fas fa-credit-card me-2"></i>收款人卡号</label>
             </div>
             
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="amount" name="amount" placeholder="请输入转账金额" 
-                       step="0.01" min="0.01" required>
+                       step="0.01" min="0.01">
                 <label for="amount"><i class="fas fa-yen-sign me-2"></i>转账金额</label>
             </div>
             
-            <button type="submit" class="btn btn-primary btn-transfer">
+            <button type="submit" class="btn btn-primary btn-transfer" id="submitTransfer">
                 <i class="fas fa-paper-plane me-2"></i>确认转账
             </button>
             

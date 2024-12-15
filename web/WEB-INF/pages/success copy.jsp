@@ -6,6 +6,6 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<h2 align="center">操作已成功！请继续选择其它服务</h2>
+<h2 align="center" class="success-message">操作已成功！请继续选择其它服务</h2>
 </body>
 </html>
