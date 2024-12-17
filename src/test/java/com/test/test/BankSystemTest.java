@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -57,34 +59,19 @@ public class BankSystemTest {
 
         // 2. 测试查看余额
         driver.findElement(By.linkText("查询余额")).click();
-        
-        // 等待iframe可用并切换到iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("mainFrame"));
-
-        // 现在我们在iframe中了，可以查找balance元素
         WebElement balanceElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("balance")));
-
-        // 使用元素...
         String balance = balanceElement.getText();
         assertNotNull("余额不应为空", balance);
-
-        // 切换回主页面，这样才能点击"转账"链接
         driver.switchTo().defaultContent();
 
         // 3. 测试转账功能
         driver.findElement(By.linkText("转账")).click();
-
-        // 等待并切换到新的iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("mainFrame"));
-        
-        // 等待转账表单加载完成
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("transferForm")));
-        
-        // 确保表单中的元素都已经加载并可交互
         wait.until(ExpectedConditions.elementToBeClickable(By.name("cardNum")));
         WebElement toCardInput = driver.findElement(By.name("cardNum"));
         WebElement amountInput = driver.findElement(By.name("amount"));
-        
         toCardInput.sendKeys("11111111");
         amountInput.sendKeys("100");
         
@@ -181,7 +168,7 @@ public class BankSystemTest {
         // 测试转账输入错误处理
         login(TEST_CARD, TEST_PASSWORD);
         driver.findElement(By.linkText("转账")).click();
-        
+
         // 等待并切换到iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("mainFrame"));
         
@@ -211,5 +198,66 @@ public class BankSystemTest {
         driver.findElement(By.id("cardNum")).sendKeys(cardNum);
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.className("login-btn")).click();
+    }
+
+
+    /**
+     * 测试会话超时处理
+     */
+    @Test
+    public void testSessionTimeout() throws InterruptedException {
+        login(TEST_CARD, TEST_PASSWORD);
+        
+        // 等待会话超时（这里假设设置为5分钟）
+        Thread.sleep(301000); // 等待5分钟+1秒
+        
+        // 尝试访问需要登录的页面
+        driver.findElement(By.linkText("查询余额")).click();
+        
+        // 验证是否重定向到登录页
+        assertTrue("会话超时应重定向到登录页", 
+            wait.until(ExpectedConditions.urlContains("login")));
+    }
+
+    /**
+     * 测试并发转账操作
+     */
+    @Test
+    public void testConcurrentTransfers() {
+        login(TEST_CARD, TEST_PASSWORD);
+        
+        // 记录初始余额
+        driver.findElement(By.linkText("查询余额")).click();
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("mainFrame"));
+        String initialBalance = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("balance"))).getText();
+        driver.switchTo().defaultContent();
+        
+        // 快速执行多次转账
+        for (int i = 0; i < 3; i++) {
+            driver.findElement(By.linkText("转账")).click();
+            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("mainFrame"));
+            
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("transferForm")));
+            WebElement toCardInput = driver.findElement(By.name("cardNum"));
+            WebElement amountInput = driver.findElement(By.name("amount"));
+            
+            toCardInput.sendKeys("11111111");
+            amountInput.sendKeys("100");
+            
+            driver.findElement(By.id("submitTransfer")).click();
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.className("success-message")));
+            
+            driver.switchTo().defaultContent();
+        }
+        
+        // 验证最终余额是否正确
+        driver.findElement(By.linkText("查询余额")).click();
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("mainFrame"));
+        String finalBalance = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("balance"))).getText();
+        
+        // 验证余额变化是否符合预期
+        double expected = Double.parseDouble(initialBalance) - 300;
+        double actual = Double.parseDouble(finalBalance);
+        assertEquals("余额应正确反映所有转账", expected, actual, 0.01);
     }
 }

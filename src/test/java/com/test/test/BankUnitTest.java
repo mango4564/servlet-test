@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * 登录模块的单元测试类
  */
-public class LoginTest {
+public class BankUnitTest {
     
     private BankService bankService;
     
